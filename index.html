@@ -23,27 +23,19 @@
   </head>
   <body>
     <h2>Confirmation réussie</h2>
-    <p>Appuyez sur le bouton ci-dessous pour ouvrir l'application !</p>
+    <p>Appuie sur le bouton ci-dessous pour ouvrir l'application :</p>
     <a id="deeplink" class="button">Chargement du lien...</a>
 
     <script>
-      function getTokenFromURL() {
-        const searchParams = new URLSearchParams(window.location.search);
-        const hashParams = new URLSearchParams(window.location.hash.substring(1));
-
-        return (
-          searchParams.get("token") ||
-          hashParams.get("token") ||
-          null
-        );
-      }
-
       window.onload = () => {
-        const token = getTokenFromURL();
+        const hashParams = new URLSearchParams(window.location.hash.substring(1));
+        const access_token = hashParams.get("access_token");
+        const refresh_token = hashParams.get("refresh_token");
+
         const link = document.getElementById("deeplink");
 
-        if (token) {
-          link.href = `exp://192.168.1.129:8081/--/confirm?token=${token}`;
+        if (access_token && refresh_token) {
+          link.href = `exp://192.168.1.129:8081/--/confirm?access_token=${access_token}&refresh_token=${refresh_token}`;
           link.innerText = "Ouvrir l'application";
         } else {
           link.href = "#";
