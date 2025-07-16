@@ -2,9 +2,25 @@
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
-    <title>Redirection vers l'app</title>
+    <title>Ouvrir l'application</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        text-align: center;
+        padding-top: 50px;
+      }
+      a.button {
+        display: inline-block;
+        padding: 12px 24px;
+        background-color: #007AFF;
+        color: white;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+        margin-top: 20px;
+      }
+    </style>
     <script>
-      // Fonction pour extraire les paramètres de l'URL
       function getQueryParams() {
         const params = {};
         window.location.search
@@ -17,45 +33,23 @@
         return params;
       }
 
-      // Récupère le token Supabase
-      const { token } = getQueryParams();
+      window.onload = () => {
+        const { token } = getQueryParams();
+        const link = document.getElementById("deeplink");
 
-      if (token) {
-        // Construit le lien vers ton app Expo avec le token
-        const deeplink = `exp://192.168.1.129:8081/--/confirm?token=${token}`;
-        // Redirige automatiquement
-        setTimeout(() => {
-          window.location.href = deeplink;
-        }, 100);
-      }
+        if (token) {
+          link.href = `exp://192.168.1.129:8081/--/confirm?token=${token}`;
+          link.innerText = "Ouvrir l'application";
+        } else {
+          link.href = "#";
+          link.innerText = "Lien invalide";
+        }
+      };
     </script>
-    <style>
-      body {
-        font-family: sans-serif;
-        text-align: center;
-        padding-top: 50px;
-      }
-      a {
-        color: #007AFF;
-        font-weight: bold;
-        text-decoration: none;
-      }
-    </style>
   </head>
   <body>
-    <p>Redirection en cours vers l'application...</p>
-    <p>
-      Si rien ne se passe, <a id="manualLink">cliquez ici pour ouvrir l'app</a>.
-    </p>
-    <script>
-      const { token } = getQueryParams();
-      const manualLink = document.getElementById("manualLink");
-      if (token) {
-        manualLink.href = `exp://192.168.1.129:8081/--/confirm?token=${token}`;
-      } else {
-        manualLink.href = "#";
-        manualLink.innerText = "Lien invalide";
-      }
-    </script>
+    <h2>Confirmation réussie</h2>
+    <p>Appuyez sur le bouton ci-dessous pour ouvrir l'application :</p>
+    <a id="deeplink" class="button">Chargement du lien...</a>
   </body>
 </html>
