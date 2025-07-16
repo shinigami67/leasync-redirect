@@ -20,21 +20,26 @@
         margin-top: 20px;
       }
     </style>
+  </head>
+  <body>
+    <h2>Confirmation réussie</h2>
+    <p>Appuyez sur le bouton ci-dessous pour ouvrir l'application !</p>
+    <a id="deeplink" class="button">Chargement du lien...</a>
+
     <script>
-      function getQueryParams() {
-        const params = {};
-        window.location.search
-          .substring(1)
-          .split("&")
-          .forEach((pair) => {
-            const [key, value] = pair.split("=");
-            if (key) params[key] = decodeURIComponent(value || "");
-          });
-        return params;
+      function getTokenFromURL() {
+        const searchParams = new URLSearchParams(window.location.search);
+        const hashParams = new URLSearchParams(window.location.hash.substring(1));
+
+        return (
+          searchParams.get("token") ||
+          hashParams.get("token") ||
+          null
+        );
       }
 
       window.onload = () => {
-        const { token } = getQueryParams();
+        const token = getTokenFromURL();
         const link = document.getElementById("deeplink");
 
         if (token) {
@@ -46,10 +51,5 @@
         }
       };
     </script>
-  </head>
-  <body>
-    <h2>Confirmation réussie</h2>
-    <p>Appuyez sur le bouton ci-dessous pour ouvrir l'application :</p>
-    <a id="deeplink" class="button">Chargement du lien...</a>
   </body>
 </html>
