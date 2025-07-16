@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <title>Redirection vers l'app</title>
     <script>
+      // Fonction pour extraire les paramètres de l'URL
       function getQueryParams() {
         const params = {};
         window.location.search
@@ -11,26 +12,50 @@
           .split("&")
           .forEach((pair) => {
             const [key, value] = pair.split("=");
-            params[key] = decodeURIComponent(value || "");
+            if (key) params[key] = decodeURIComponent(value || "");
           });
         return params;
       }
 
-      const params = getQueryParams();
-      const { access_token, refresh_token } = params;
+      // Récupère le token Supabase
+      const { token } = getQueryParams();
 
-      if (access_token && refresh_token) {
-        const deeplink = `exp://192.168.1.129:8081/--/confirm?access_token=${access_token}&refresh_token=${refresh_token}`;
-        window.location.href = deeplink;
+      if (token) {
+        // Construit le lien vers ton app Expo avec le token
+        const deeplink = `exp://192.168.1.129:8081/--/confirm?token=${token}`;
+        // Redirige automatiquement
+        setTimeout(() => {
+          window.location.href = deeplink;
+        }, 100);
       }
     </script>
+    <style>
+      body {
+        font-family: sans-serif;
+        text-align: center;
+        padding-top: 50px;
+      }
+      a {
+        color: #007AFF;
+        font-weight: bold;
+        text-decoration: none;
+      }
+    </style>
   </head>
   <body>
-    <p>Redirection en cours...</p>
-    <p>Si rien ne se passe!!!, <a id="manualLink">cliquez ici</a>.</p>
+    <p>Redirection en cours vers l'application...</p>
+    <p>
+      Si rien ne se passe, <a id="manualLink">cliquez ici pour ouvrir l'app</a>.
+    </p>
     <script>
+      const { token } = getQueryParams();
       const manualLink = document.getElementById("manualLink");
-      manualLink.href = window.location.href;
+      if (token) {
+        manualLink.href = `exp://192.168.1.129:8081/--/confirm?token=${token}`;
+      } else {
+        manualLink.href = "#";
+        manualLink.innerText = "Lien invalide";
+      }
     </script>
   </body>
 </html>
