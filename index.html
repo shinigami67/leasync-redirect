@@ -3,16 +3,34 @@
   <head>
     <meta charset="UTF-8" />
     <title>Redirection vers l'app</title>
-    <a href="exp://192.168.1.129:8081/--/confirm">Ouvrir l'app</a>
-    <style>
-      body {
-        font-family: sans-serif;
-        text-align: center;
-        padding-top: 50px;
+    <script>
+      function getQueryParams() {
+        const params = {};
+        window.location.search
+          .substring(1)
+          .split("&")
+          .forEach((pair) => {
+            const [key, value] = pair.split("=");
+            params[key] = decodeURIComponent(value || "");
+          });
+        return params;
       }
-    </style>
+
+      const params = getQueryParams();
+      const { access_token, refresh_token } = params;
+
+      if (access_token && refresh_token) {
+        const deeplink = `exp://192.168.1.129:8081/--/confirm?access_token=${access_token}&refresh_token=${refresh_token}`;
+        window.location.href = deeplink;
+      }
+    </script>
   </head>
   <body>
-    <p>Redirection en cours vers l'application!!</p>
+    <p>Redirection en cours...</p>
+    <p>Si rien ne se passe!!!, <a id="manualLink">cliquez ici</a>.</p>
+    <script>
+      const manualLink = document.getElementById("manualLink");
+      manualLink.href = window.location.href;
+    </script>
   </body>
 </html>
